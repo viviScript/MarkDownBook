@@ -188,7 +188,7 @@ function outerFunction() {
 
     // 该变量的作用域限制在该函数内部，并且在函数外部访问不到；
     var innerValue = 'samurai';
-    
+
     // 在外部函数内，声明一个内部函数。
     // 注意：声明该函数时，innerValue是在作用域内的
     function innerFunction() {
@@ -207,3 +207,39 @@ outerFunction();
 // 我们不能直接调用内部函数，因为它的作用域（和innerValue一起）被限制在outerFunction内。
 later();
 ```
+
+### 闭包使用场景：私有变量
+
+* ```在构造器内隐藏变量，使其在外部作用域不可访问，但是可以存在于闭包内。```
+
+```javascript
+function Ninja() {
+    var feints = 0;
+
+    this.getFenits = function() {
+        return feints;
+    }
+
+    this.feint = function() {
+        feints++;
+    }
+}
+
+var ninja = new Ninja();
+
+ninja.feint();
+
+assert(ninja.getFenits() === 1, '调用一次，内部变量++');
+
+assert(ninja.feints === undefined, '函数外部不可访问')
+```
+
+* ```变量的作用域依赖于变量所在的闭包```
+
+* ```闭包记住的是变量的引用，而不是闭包创建时刻该变量的值```
+
+## 原型与面向对象
+
+* ```所有的函数在初始化时都有一个prototype属性，该属性的初始值是一个空对象。```
+* ```使用new操作符将函数作为构造器进行调用的时候，其上下文被定义为新对象的实例。```
+* ```在构造器内的绑定操作优先级永远高于在原型上的绑定操作优先级。因为构造器的this上下文指向的是实例自身，所以我们可以在构造器内对核心内容执行初始化操作。```
