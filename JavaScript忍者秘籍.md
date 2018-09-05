@@ -171,3 +171,39 @@ assert(ninja2.result === 26, 'juggled via call');
 * ```递归：当函数调用自身，或调用另外一个函数，但这个函数的调用树中的某个地方又调用到了自己时，就产生了递归。```
 
 * ```递归的两个条件：引用自身，并且有终止条件。```
+
+## 闭包
+
+* ```闭包是一个函数在创建时允许自身函数访问并操作该自身函数之外的变量时所创建的作用域```
+
+* ```闭包可以让函数访问所有的变量和函数，只要这些变量和函数存在于该函数声明时的作用域内就行。```
+
+```javascript
+var outerValue = 'ninja';
+
+var later;
+
+
+function outerFunction() {
+
+    // 该变量的作用域限制在该函数内部，并且在函数外部访问不到；
+    var innerValue = 'samurai';
+    
+    // 在外部函数内，声明一个内部函数。
+    // 注意：声明该函数时，innerValue是在作用域内的
+    function innerFunction() {
+        assert(outerValue, 'I can see the ninja');
+        assert(innerValue, 'I can see the samurai');
+
+        // 将内部函数引用到later变量上，由于later在全局作用域内，所以可以对它进行调用。
+        later = innerFunction;
+    }
+}
+
+// 调用外部函数，将会声明内部函数，并将内部函数赋值给later变量。
+outerFunction();
+
+// 通过later调用内部函数。
+// 我们不能直接调用内部函数，因为它的作用域（和innerValue一起）被限制在outerFunction内。
+later();
+```
